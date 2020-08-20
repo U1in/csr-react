@@ -11,14 +11,16 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 //动态添加入口
 function getEntry() {
 	var entry = {};
-	glob.sync('./views/pages/**/index.js').forEach(function(name){
+	glob.sync('./views/pages/[A-Za-z0-9\.-_]*/index.tsx').forEach(function(name){
 		const start = name.indexOf('pages/') + 6;
-		const end = name.length - 9;
+		const end = name.length - 10;
 		const eArr = [];
 		const n = name.slice(start,end);
-		eArr.push('@babel/polyfill');
-		eArr.push(name);
-		entry[n] = eArr;
+		if(!entry[n]) {
+			eArr.push('@babel/polyfill');
+			eArr.push(name);
+			entry[n] = eArr;
+		}
 	})
 	return entry;
 }
@@ -39,7 +41,7 @@ const webpackConfig = {
 		filename: 'js/[name]-[hash:16].js'
 	},
 	resolve: {
-    extensions: ['.jsx', '.js'],
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
     alias: {
     	'@': path.join(__dirname, '../', "views")
     }
@@ -48,14 +50,14 @@ const webpackConfig = {
 	module:{
 		rules:[
 			{
-				test:/\.js$/,
+				test:/\.jsx?$/,
 				exclude:/node_modules/,
 				use: ['babel-loader']
 			},
 			{
-				test: /\.jsx$/,
+				test: /\.tsx?$/,
 				exclude: /node_modules/,
-				use: ['babel-loader']
+				use: ['babel-loader', 'awesome-typescript-loader']
 			},
 			//css处理
 			{

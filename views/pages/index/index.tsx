@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
-import 'antd/dist/antd.css';
 import { HashRouter } from 'react-router-dom';
+import App from './app';
 
 ReactDOM.render(
-<HashRouter>
-  <App />
-</HashRouter>
+  <HashRouter>
+    <App />
+  </HashRouter>
 , document.getElementById('app'));
